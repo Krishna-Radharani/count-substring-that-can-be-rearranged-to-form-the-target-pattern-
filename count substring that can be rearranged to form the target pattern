@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool isvalid(vector<int>& prefix, vector<int>& count) {
+    for (int i = 0; i < 26; i++) {
+        if (prefix[i] < count[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+    long long validSubstringCount(string word1, string word2) {
+        vector<int>count(26,0);
+        for(int i=0;i<word2.size();i++){
+            count[word2[i]-'a']++;
+        }
+        long long ans=0;
+        int i=0,j=0;
+        int n=word1.size();
+        int m=word2.size();
+        vector<int>prefix(26,0);
+        while(i<n){
+            prefix[word1[i]-'a']++;
+          while (isvalid(prefix, count)) {
+                // Count all substrings starting from `j` to `i`
+                ans += (n - i);
+                // Move the start of the window forward
+                prefix[word1[j] - 'a']--; //think about this case s="abacabc",pat="abc"
+                j++;
+                // Once the substring becomes invalid, break and start fresh
+                if (!isvalid(prefix, count)) {
+                    break;
+                }
+            }
+            i++;
+        }
+        return ans;
+    }
+};
